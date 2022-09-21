@@ -1,3 +1,7 @@
 /* TODO: this needs to be fixed and done better */
-tr:hover { background: #5F9EA0 !important; }
-tr:hover td { background: transparent; }
+tr:hover {
+    background: #5f9ea0 !important;
+}
+tr:hover td {
+    background: transparent;
+}

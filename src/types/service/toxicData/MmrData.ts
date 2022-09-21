@@ -1,5 +1,5 @@
 export interface MmrData {
-  mmr: {
-    [key: string]: number;
-  };
+    mmr: {
+        [key: string]: number
+    }
 }

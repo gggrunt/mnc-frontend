@@ -1,12 +1,15 @@
-import {createAction} from "@reduxjs/toolkit";
+import { createAction } from '@reduxjs/toolkit'
 
 export enum GameInfoActionType {
-    HydrateChampionsComplete = "GameInfoActions/HydrateChampionsComplete",
+    HydrateChampionsComplete = 'GameInfoActions/HydrateChampionsComplete',
 }
 
 export const GameInfoAction = {
-    hydrateChampionsComplete: createAction(GameInfoActionType.HydrateChampionsComplete, (data: {[key: string]: string}) => ({
-        type: GameInfoActionType.HydrateChampionsComplete, 
-        payload: data
-    })),
-};
+    hydrateChampionsComplete: createAction(
+        GameInfoActionType.HydrateChampionsComplete,
+        (data: { [key: string]: string }) => ({
+            type: GameInfoActionType.HydrateChampionsComplete,
+            payload: data,
+        })
+    ),
+}
