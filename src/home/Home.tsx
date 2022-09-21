@@ -54,6 +54,7 @@ export default function Home() {
   }, [mmrResponse.isLoading, mmrResponse.data]);
 
   return (
+      <>
     <div
       style={{
         display: "flex",
@@ -64,7 +65,9 @@ export default function Home() {
       }}
     >
       <h1 style={{ color: "white" }}> Welcome to Monday Night Customs Hub </h1>
-      <Auth />
+      
     </div>
+    <Auth />
+    </>
   );
 }
