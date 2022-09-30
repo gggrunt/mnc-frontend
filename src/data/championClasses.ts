@@ -25,7 +25,7 @@ export function championClassWinRates(champions: Champion[]) {
 
     // initialize all win rates to 0
     for (const championClass of Object.keys(ChampionClass)) {
-        classWinRate[championClass] =  {wins: 0, losses: 0};
+        classWinRate[championClass] = { wins: 0, losses: 0 };
     }
 
     for (const champion of champions) {
@@ -99,7 +99,7 @@ export const ChampionClassMap: { [id: string]: ChampionClass[] } = {
     Karma: [ChampionClass.Enchanter, ChampionClass.Burst],
     Lulu: [ChampionClass.Enchanter],
     Nami: [ChampionClass.Enchanter],
-    Renata: [ChampionClass.Enchanter],
+    'Renata Glasc': [ChampionClass.Enchanter],
     Seraphine: [ChampionClass.Enchanter, ChampionClass.Burst],
     Sona: [ChampionClass.Enchanter],
     Soraka: [ChampionClass.Enchanter],

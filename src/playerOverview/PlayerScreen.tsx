@@ -1,5 +1,5 @@
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLoaderData, useNavigate } from 'react-router-dom';
 import { Error } from '../components/Error';
@@ -8,7 +8,7 @@ import { StatsCard } from '../components/StatsCard';
 import { usePlayer } from '../hooks/selectorWrapperHooks';
 import { gameInfoSelector } from '../redux/gameInfo/gameInfoSelectors';
 import { Champion } from '../types/domain/Champion';
-import { Player } from '../types/domain/Player';
+import { Player, PlayerRecord } from '../types/domain/Player';
 import { getChampionImage } from '../utils/championImageHelpers';
 
 import { championClassWinRates, ChampionClass } from '../data/championClasses';
@@ -25,6 +25,7 @@ import {
 } from 'chart.js';
 import { getMmrColor } from '../utils/mmrColorHelpers';
 import { SummonerCollage } from '../components/SummonerCollage';
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
 ChartJS.register(
     RadialLinearScale,
@@ -73,10 +74,12 @@ const columns: ColumnDef<PlayerScreenChampion, any>[] = [
         cell: (info) => {
             return (
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <img
-                        src={info.row.original.imageUrl}
-                        style={{ width: 32, height: 32, marginRight: 8 }}
-                    />
+                    {info.row.original.imageUrl ? (
+                        <img
+                            src={info.row.original.imageUrl}
+                            style={{ width: 32, height: 32, marginRight: 8 }}
+                        />
+                    ) : null}
                     {info.getValue()}
                 </div>
             );
@@ -117,6 +120,86 @@ const columns: ColumnDef<PlayerScreenChampion, any>[] = [
     }),
 ];
 
+const teammateColumns: ColumnDef<PlayerScreenChampion, any>[] = [
+    columnHelper.accessor((row) => row.name, {
+        id: 'name',
+        cell: (info) => info.getValue(),
+        header: () => <span>Name</span>,
+    }),
+    columnHelper.accessor((row) => row.wins, {
+        id: 'wins',
+        cell: (info) => info.getValue(),
+        header: () => <span>Wins With</span>,
+        meta: {
+            isNumeric: true,
+        },
+    }),
+    columnHelper.accessor((row) => row.winPercentage, {
+        id: 'winPercentage',
+        cell: (info) => info.getValue(),
+        header: () => <span>Win Percentage With</span>,
+        meta: {
+            isNumeric: true,
+        },
+    }),
+    columnHelper.accessor((row) => row.losses, {
+        id: 'losses',
+        cell: (info) => info.getValue(),
+        header: () => <span>Losses With</span>,
+        meta: {
+            isNumeric: true,
+        },
+    }),
+    columnHelper.accessor((row) => row.totalGames, {
+        id: 'totalGames',
+        cell: (info) => info.getValue(),
+        header: () => <span>Total Games With</span>,
+        meta: {
+            isNumeric: true,
+        },
+    }),
+];
+
+const opponentColumns: ColumnDef<PlayerScreenChampion, any>[] = [
+    columnHelper.accessor((row) => row.name, {
+        id: 'name',
+        cell: (info) => info.getValue(),
+        header: () => <span>Name</span>,
+    }),
+    columnHelper.accessor((row) => row.wins, {
+        id: 'wins',
+        cell: (info) => info.getValue(),
+        header: () => <span>Wins Against</span>,
+        meta: {
+            isNumeric: true,
+        },
+    }),
+    columnHelper.accessor((row) => row.winPercentage, {
+        id: 'winPercentage',
+        cell: (info) => info.getValue(),
+        header: () => <span>Win Percentage Against</span>,
+        meta: {
+            isNumeric: true,
+        },
+    }),
+    columnHelper.accessor((row) => row.losses, {
+        id: 'losses',
+        cell: (info) => info.getValue(),
+        header: () => <span>Losses Against</span>,
+        meta: {
+            isNumeric: true,
+        },
+    }),
+    columnHelper.accessor((row) => row.totalGames, {
+        id: 'totalGames',
+        cell: (info) => info.getValue(),
+        header: () => <span>Total Games Against</span>,
+        meta: {
+            isNumeric: true,
+        },
+    }),
+];
+
 export const PlayerScreen = React.memo(function PlayerScreen() {
     const navigate = useNavigate();
     const playerId = useLoaderData() as string;
@@ -124,8 +207,9 @@ export const PlayerScreen = React.memo(function PlayerScreen() {
 
     const championIdMap = useSelector(gameInfoSelector.getChampionMap);
 
-    const playerClasses = championClassWinRates(
-        Object.values(player?.champions ?? {})
+    const playerClasses = useMemo(
+        () => championClassWinRates(Object.values(player?.champions ?? {})),
+        [player]
     );
 
     const chartLabels = Object.keys(ChampionClass).map((value) => {
@@ -179,12 +263,12 @@ export const PlayerScreen = React.memo(function PlayerScreen() {
         championIdMap
     );
 
-    const statsCardPlayer: Player & { extraStats: { [id: string]: string } } = {
-        ...player,
-        extraStats: player.mmr
-            ? { mmr: Math.round(player.mmr).toString() }
-            : {},
-    };
+    const playerTeammateData: PlayerRecord[] = Object.values(
+        player.teammates ?? []
+    );
+    const playerOpponentData: PlayerRecord[] = Object.values(
+        player.opponents ?? []
+    );
 
     return (
         <div
@@ -246,7 +330,6 @@ export const PlayerScreen = React.memo(function PlayerScreen() {
                                 flex: 1,
                                 marginRight: 32,
                                 alignItems: 'center',
-                                //alignSelf: "stretch"
                             }}
                         >
                             <h1
@@ -274,19 +357,66 @@ export const PlayerScreen = React.memo(function PlayerScreen() {
                         </div>
                     </div>
                 </div>
-                <SortableTable
-                    columns={columns}
-                    data={playerChampionData}
-                    getRowProps={(row: any) => {
-                        return {
-                            onClick: () => {
-                                navigate(
-                                    '/championOverview/' + row.getValue('name')
-                                );
-                            },
-                        };
-                    }}
-                />
+                <Tabs>
+                    <TabList>
+                        <Tab>Champion Overview</Tab>
+                        <Tab>Teammate Record</Tab>
+                        <Tab>Oppponent Record</Tab>
+                    </TabList>
+                    <TabPanels>
+                        <TabPanel>
+                            <SortableTable
+                                columns={columns}
+                                data={playerChampionData}
+                                getRowProps={(row: any) => {
+                                    return {
+                                        onClick: () => {
+                                            navigate(
+                                                '/championOverview/' +
+                                                    row.getValue('name')
+                                            );
+                                            window.scrollTo(0, 0);
+                                        },
+                                    };
+                                }}
+                            />
+                        </TabPanel>
+                        <TabPanel>
+                            <SortableTable
+                                columns={teammateColumns}
+                                data={playerTeammateData}
+                                getRowProps={(row: any) => {
+                                    return {
+                                        onClick: () => {
+                                            navigate(
+                                                '/playerOverview/' +
+                                                    row.getValue('name')
+                                            );
+                                            window.scrollTo(0, 0);
+                                        },
+                                    };
+                                }}
+                            />
+                        </TabPanel>
+                        <TabPanel>
+                            <SortableTable
+                                columns={opponentColumns}
+                                data={playerOpponentData}
+                                getRowProps={(row: any) => {
+                                    return {
+                                        onClick: () => {
+                                            navigate(
+                                                '/playerOverview/' +
+                                                    row.getValue('name')
+                                            );
+                                            window.scrollTo(0, 0);
+                                        },
+                                    };
+                                }}
+                            />
+                        </TabPanel>
+                    </TabPanels>
+                </Tabs>
             </div>
         </div>
     );

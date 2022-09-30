@@ -46,6 +46,8 @@ export const statsReducer = createReducer(initialState, (builder) => {
                             wins: player.wins,
                             losses: player.losses,
                             champions: player.champions,
+                            teammates: player.teammates,
+                            opponents: player.opponents,
                         };
                     } else {
                         state.players[player.name] = player;
