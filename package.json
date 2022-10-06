@@ -50,12 +50,6 @@
     "lint-staged": {
         "*.+(js|jsx|ts|tsx)": "eslint -c eslint.config.json --fix"
     },
-    "eslintConfig": {
-        "extends": [
-            "react-app",
-            "react-app/jest"
-        ]
-    },
     "browserslist": {
         "production": [
             ">0.2%",
