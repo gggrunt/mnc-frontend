@@ -22,6 +22,10 @@ import {
     MatchScreen,
 } from '../matchHistory/MatchScreen';
 import { PickBanScreen } from '../admin/PickBanScreen';
+import {
+    loader as playerComparisonLoader,
+    PlayerComparison,
+} from '../playerOverview/PlayerComparison';
 
 export const router = createBrowserRouter([
     {
@@ -45,6 +49,11 @@ export const router = createBrowserRouter([
                 path: '/playerOverview/:playerId',
                 loader: playerLoader,
                 element: <PlayerScreen />,
+            },
+            {
+                path: '/playerOverview/:player1Id/:player2Id',
+                loader: playerComparisonLoader,
+                element: <PlayerComparison />,
             },
             {
                 path: '/championOverview',
