@@ -255,6 +255,7 @@ export const PlayerComparison = React.memo(function PlayerComparison() {
                 direction='row'
                 justifyContent={'space-between'}
                 minWidth={500}
+                marginBottom={8}
             >
                 <Flex direction='column' alignItems='center'>
                     <h1>{player1.name}</h1>
