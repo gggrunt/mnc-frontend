@@ -1,6 +1,7 @@
-import { Flex, Heading } from '@chakra-ui/react';
+import { Box, Flex, Heading } from '@chakra-ui/react';
 import { ColumnDef, createColumnHelper, Row } from '@tanstack/react-table';
 import React from 'react';
+import { Scatter } from 'react-chartjs-2';
 import { FiChevronDown, FiChevronUp, FiMinus } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { MmrTag } from '../components/MmrTag';
@@ -153,9 +154,98 @@ export const PlayerOverview = React.memo(function PlayerOverview() {
 
     const processedData = processPlayers(data, mmrPerMatchMap);
 
+    let averageGames = 0;
+    let averageMmr = 0;
+    let count = 0;
+
+    const scatterData = processedData.map((value) => {
+        averageGames = value.totalGames + averageGames;
+
+        if (value.mmr > 0) {
+            averageMmr = value.mmr + averageMmr;
+            count++;
+        }
+
+        return {
+            x: value.totalGames,
+            y: value.mmr,
+            label: value.name,
+        };
+    });
+
+    const averageData = [
+        { x: averageGames / count, y: Math.round(averageMmr / count) },
+    ];
+
     return (
-        <Flex direction='column' justify='center' align='center'>
+        <Flex direction='column' justifyContent='center' alignItems='center'>
             <Heading>Player Overview</Heading>
+            <Box width={720} alignSelf={'center'} marginBottom={8}>
+                <Scatter
+                    data={{
+                        datasets: [
+                            {
+                                data: scatterData,
+                                backgroundColor: 'rgba(26, 133, 255, 0.2)',
+                                borderColor: 'rgb(26, 133, 255)',
+                                pointBackgroundColor: 'rgb(26, 133, 255)',
+                                pointBorderColor: '#fff',
+                                pointHoverBackgroundColor: '#fff',
+                                pointHoverBorderColor: 'rgb(26, 133, 255)',
+                                pointRadius: 6,
+                            },
+                            {
+                                label: 'Average',
+                                data: averageData,
+                                backgroundColor: 'rgba(212,17,89,0.2)',
+                                borderColor: 'rgb(212,17,89)',
+                                pointBackgroundColor: 'rgb(212,17,89)',
+                                pointBorderColor: '#fff',
+                                pointHoverBackgroundColor: '#fff',
+                                pointHoverBorderColor: 'rgb(212,17,89)',
+                                pointRadius: 12,
+                            },
+                        ],
+                    }}
+                    options={{
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                min: 0,
+                                max: mmrPerMatch.length,
+                            },
+                            y: {
+                                min: 1300,
+                                suggestedMax: 1800,
+                            },
+                        },
+                        plugins: {
+                            legend: {
+                                display: false,
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: (tooltipItem) => {
+                                        if (
+                                            tooltipItem.dataset.label ===
+                                            'Average'
+                                        ) {
+                                            return 'Average';
+                                        }
+
+                                        return scatterData[
+                                            tooltipItem.dataIndex
+                                        ].label;
+                                    },
+                                    afterLabel: (tooltipItem) => {
+                                        return tooltipItem.parsed.y.toString();
+                                    },
+                                },
+                            },
+                        },
+                    }}
+                />
+            </Box>
             <SortableTable
                 columns={columns}
                 data={processedData}
