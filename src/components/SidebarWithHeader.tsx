@@ -20,6 +20,7 @@ import { ReactNode, useCallback } from 'react';
 import { IconType } from 'react-icons';
 import {
     FiCalendar,
+    FiCloudLightning,
     FiHome,
     FiMenu,
     FiShield,
@@ -39,6 +40,7 @@ const LinkItems: Array<LinkItemProps> = [
     { name: 'Champion Overview', icon: FiShield, route: '/championOverview' },
     { name: 'Match History', icon: FiCalendar, route: '/matchHistory' },
     { name: 'Matchmaker', icon: FiZap, route: '/matchmaker' },
+    { name: 'Team Builder', icon: FiCloudLightning, route: '/teamBuilder' },
 ];
 
 export default function SidebarWithHeader({
