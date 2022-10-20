@@ -12,7 +12,6 @@ import {
 
 import {
     Box,
-    chakra,
     Flex,
     Heading,
     Tab,
@@ -24,7 +23,7 @@ import {
 import { ChartData } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
 import { Loading } from '../components/Loading';
-import { MmrCard } from '../components/MmrCard';
+import { SeasonRankCard } from '../components/SeasonRankCard';
 import { SummonerCollage } from '../components/SummonerCollage';
 import { ChampionClass, championClassWinRates } from '../data/championClasses';
 import {
@@ -34,6 +33,10 @@ import {
 import { DataDragonService } from '../services/dataDragon/DataDragonService';
 import { ToxicDataService } from '../services/toxicData/ToxicDataService';
 import { Match } from '../types/domain/Match';
+import {
+    getMmrTrendingChange,
+    mapMmrHistoryCollectionToPlayerMmrHistoryMap,
+} from '../utils/mmrHelpers';
 import { PlayerMmrSummary } from './PlayerMmrSummary';
 import {
     championColumns,
@@ -89,6 +92,16 @@ export const PlayerScreen = React.memo(function PlayerScreen() {
 
     const matchHistoryResponse = ToxicDataService.useMatchHistory();
     const matchHistory = matchHistoryResponse.data ?? [];
+
+    const mmrPerMatchResponse = ToxicDataService.useMmrPerMatch();
+    const mmrPerMatch = mmrPerMatchResponse.data ?? [];
+    const mmrPerMatchMap =
+        mapMmrHistoryCollectionToPlayerMmrHistoryMap(mmrPerMatch);
+    const playerMmrPerMatch = mmrPerMatchMap[playerId] ?? [];
+
+    // calculate the trending change to show above the graph
+    // ignore the first 10 games since they are used for placement
+    const mmrTrend = getMmrTrendingChange(playerMmrPerMatch.slice(9));
 
     // only recompute the player classes when are looking at a new player
     const playerClasses = useMemo(
@@ -197,16 +210,23 @@ export const PlayerScreen = React.memo(function PlayerScreen() {
                     wrap='wrap'
                 >
                     <Flex direction='row' wrap='wrap' justify='center'>
-                        <Box marginBottom='4'>
+                        <Box margin='2' display='block'>
                             <SummonerCollage player={player} />
                         </Box>
-                        <Box marginLeft='4' marginBottom='4'>
-                            <StatsCard stats={player} hideName={true} />
+                        <Box margin='2' display='block'>
+                            <Flex direction='column'>
+                                <SeasonRankCard
+                                    player={player}
+                                    rankTrend={mmrTrend}
+                                />
+                                <StatsCard stats={player} hideName={true} />
+                            </Flex>
                         </Box>
-                        <Box marginBottom='4'>
-                            <MmrCard player={player} />
-                        </Box>
-                        <Flex flex='1' maxWidth='320'>
+                        <Flex
+                            // flex='1'
+                            maxWidth='320'
+                            margin='2'
+                        >
                             <Radar data={chartData} />
                         </Flex>
                     </Flex>
@@ -255,7 +275,9 @@ export const PlayerScreen = React.memo(function PlayerScreen() {
                         />
                     </TabPanel>
                     <TabPanel>
-                        <PlayerMmrSummary playerId={player.name} />
+                        <PlayerMmrSummary
+                            playerMmrHistory={playerMmrPerMatch}
+                        />
                     </TabPanel>
                     <TabPanel>
                         <SortableTable

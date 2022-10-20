@@ -1,22 +1,18 @@
 import { Flex } from '@chakra-ui/react';
 import {
-    Chart as ChartJS,
-    PointElement,
-    LineElement,
-    Filler,
-    Tooltip,
-    Legend,
     CategoryScale,
+    Chart as ChartJS,
+    Filler,
+    Legend,
     LinearScale,
+    LineElement,
+    PointElement,
+    Tooltip,
 } from 'chart.js';
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 import { FiChevronDown, FiChevronUp, FiMinus } from 'react-icons/fi';
-import { ToxicDataService } from '../services/toxicData/ToxicDataService';
-import {
-    getMmrTrendingChange,
-    mapMmrHistoryCollectionToPlayerMmrHistoryMap,
-} from '../utils/mmrHelpers';
+import { getMmrTrendingChange } from '../utils/mmrHelpers';
 
 ChartJS.register(
     PointElement,
@@ -55,23 +51,12 @@ function processPlayerMmr(data: { gameId: number; mmr: number }[]): {
 }
 
 export const PlayerMmrSummary = React.memo(function PlayerMmrSummary({
-    playerId,
+    playerMmrHistory,
 }: {
-    playerId: string;
+    playerMmrHistory: { gameId: number; mmr: number }[];
 }) {
-    const mmrPerMatchResponse = ToxicDataService.useMmrPerMatch();
-    const mmrPerMatch = mmrPerMatchResponse.data ?? [];
-    const mmrPerMatchMap =
-        mapMmrHistoryCollectionToPlayerMmrHistoryMap(mmrPerMatch);
-
-    // get the mmr history collection for the selected user
-    const playerMmrPerMatch = mmrPerMatchMap[playerId] ?? [];
-
     // ignore the first 10 games since they are used for placement
-    const playerMmrPerMatchSliced = playerMmrPerMatch.slice(9);
-
-    // calculate the trending change to show above the graph
-    const mmrChangePercentage = getMmrTrendingChange(playerMmrPerMatchSliced);
+    const playerMmrPerMatchSliced = playerMmrHistory.slice(9);
 
     const {
         result: data,
@@ -97,44 +82,30 @@ export const PlayerMmrSummary = React.memo(function PlayerMmrSummary({
     return (
         <Flex direction='column'>
             {playerMmrPerMatchSliced.length > 1 ? (
-                <>
-                    <Flex direction='row' justify='center' align='center'>
-                        <h1 style={{ fontSize: 60 }}>
-                            {`${mmrChangePercentage}`}
-                        </h1>
-                        {mmrChangePercentage === 0 ? (
-                            <FiMinus size={'60'} color={'orange'} />
-                        ) : mmrChangePercentage > 0 ? (
-                            <FiChevronUp size={'60'} color={'green'} />
-                        ) : (
-                            <FiChevronDown size={'60'} color={'red'} />
-                        )}
-                    </Flex>
-                    <Line
-                        data={playerMmrPerMatchData}
-                        style={{ maxHeight: 300 }}
-                        options={{
-                            scales: {
-                                x: {
-                                    type: 'linear',
-                                    min: playerMmrPerMatchSliced[0]?.gameId,
-                                    max: playerMmrPerMatchSliced[
-                                        playerMmrPerMatchSliced.length - 1
-                                    ]?.gameId,
-                                },
-                                y: {
-                                    suggestedMin: minMmr - 50,
-                                    suggestedMax: maxMmr + 50,
-                                },
+                <Line
+                    data={playerMmrPerMatchData}
+                    style={{ maxHeight: 300 }}
+                    options={{
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                min: playerMmrPerMatchSliced[0]?.gameId,
+                                max: playerMmrPerMatchSliced[
+                                    playerMmrPerMatchSliced.length - 1
+                                ]?.gameId,
                             },
-                            plugins: {
-                                legend: {
-                                    display: false,
-                                },
+                            y: {
+                                suggestedMin: minMmr - 50,
+                                suggestedMax: maxMmr + 50,
                             },
-                        }}
-                    />
-                </>
+                        },
+                        plugins: {
+                            legend: {
+                                display: false,
+                            },
+                        },
+                    }}
+                />
             ) : (
                 <Flex direction='column' justify='center' align='center'>
                     <h1 style={{ fontSize: 30 }}>{`Not enough data.`}</h1>

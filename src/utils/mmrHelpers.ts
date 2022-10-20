@@ -52,15 +52,9 @@ export function getMmrTrendingChange(data: { gameId: number; mmr: number }[]) {
     // this will return an array of the last 5 items (or if less than 5 items, the entire collection)
     const last5Matches = data.slice(-5);
 
-    let total = 0;
-
     if (last5Matches.length <= 1) {
         return 0;
     }
 
-    for (let i = 1; i < last5Matches.length; i++) {
-        total = last5Matches[i].mmr - last5Matches[i - 1].mmr;
-    }
-
-    return total;
+    return last5Matches[last5Matches.length - 1].mmr - last5Matches[0].mmr;
 }
