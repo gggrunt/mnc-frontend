@@ -3,7 +3,7 @@ import type { ComponentStyleConfig } from '@chakra-ui/theme';
 export const Button: ComponentStyleConfig = {
     defaultProps: {
         variant: 'solid',
-        size: ['md'],
+        size: ['sm', 'md', 'lg'],
         colorScheme: 'primary',
     },
 };

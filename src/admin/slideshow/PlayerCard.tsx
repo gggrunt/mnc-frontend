@@ -170,9 +170,9 @@ export const PlayerCard = (props: { player: Player }) => {
                 >
                     <div
                         style={{
-                            width: 128,
-                            height: 128,
-                            marginBottom: 64 + 64,
+                            width: 256,
+                            height: 256,
+                            marginBottom: 16,
                         }}
                     >
                         <SummonerCollage player={props.player} />

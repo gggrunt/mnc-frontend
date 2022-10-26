@@ -23,6 +23,7 @@ import {
 } from '../matchHistory/MatchScreen';
 import { PickBanScreen } from '../admin/PickBanScreen';
 import { TeamBuilder } from '../teamBuilder/TeamBuilder';
+import { Leaderboard } from '../leaderboard/Leaderboard';
 
 export const router = createBrowserRouter([
     {
@@ -86,6 +87,10 @@ export const router = createBrowserRouter([
             {
                 path: '/teamBuilder',
                 element: <TeamBuilder />,
+            },
+            {
+                path: '/leaderboard',
+                element: <Leaderboard />,
             },
         ],
     },

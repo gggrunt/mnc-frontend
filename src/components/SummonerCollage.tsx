@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import React from 'react';
 import { DataDragonService } from '../services/dataDragon/DataDragonService';
 import { Champion } from '../types/domain/Champion';
@@ -44,61 +44,77 @@ export const SummonerCollage = React.memo(function Error({
         });
 
     return (
-        <Flex flex='1' direction='column'>
+        <Flex direction='column' borderColor={'red'} borderWidth={'5'}>
             <Flex direction='row'>
                 {sortedChampions[0] ? (
-                    <img
-                        alt='player champion icon 1'
-                        style={{ flex: 1 }}
-                        src={sortedChampions[0].imageUri}
-                    />
+                    <Box>
+                        <img
+                            alt='player champion icon 1'
+                            style={{ flex: 1 }}
+                            src={sortedChampions[0].imageUri}
+                        />
+                    </Box>
                 ) : (
-                    <img
-                        alt='random icon 1'
-                        style={{ flex: 1 }}
-                        src={getRandomIcon(0)}
-                    />
+                    <Box>
+                        <img
+                            alt='random icon 1'
+                            style={{ flex: 1 }}
+                            src={getRandomIcon(0)}
+                        />
+                    </Box>
                 )}
                 {sortedChampions[2] ? (
-                    <img
-                        alt='player champion icon 2'
-                        style={{ flex: 1 }}
-                        src={sortedChampions[2].imageUri}
-                    />
+                    <Box>
+                        <img
+                            alt='player champion icon 2'
+                            style={{ flex: 1 }}
+                            src={sortedChampions[2].imageUri}
+                        />
+                    </Box>
                 ) : (
-                    <img
-                        alt='random icon 2'
-                        style={{ flex: 1 }}
-                        src={getRandomIcon(2)}
-                    />
+                    <Box>
+                        <img
+                            alt='random icon 2'
+                            style={{ flex: 1 }}
+                            src={getRandomIcon(2)}
+                        />
+                    </Box>
                 )}
             </Flex>
             <Flex direction='row'>
                 {sortedChampions[3] ? (
-                    <img
-                        alt='player champion icon 3'
-                        style={{ flex: 1 }}
-                        src={sortedChampions[3].imageUri}
-                    />
+                    <Box>
+                        <img
+                            alt='player champion icon 3'
+                            style={{ flex: 1 }}
+                            src={sortedChampions[3].imageUri}
+                        />
+                    </Box>
                 ) : (
-                    <img
-                        alt='random icon 3'
-                        style={{ flex: 1 }}
-                        src={getRandomIcon(3)}
-                    />
+                    <Box>
+                        <img
+                            alt='random icon 3'
+                            style={{ flex: 1 }}
+                            src={getRandomIcon(3)}
+                        />
+                    </Box>
                 )}
                 {sortedChampions[1] ? (
-                    <img
-                        alt='random champion icon 4'
-                        style={{ flex: 1 }}
-                        src={sortedChampions[1].imageUri}
-                    />
+                    <Box>
+                        <img
+                            alt='random champion icon 4'
+                            style={{ flex: 1 }}
+                            src={sortedChampions[1].imageUri}
+                        />
+                    </Box>
                 ) : (
-                    <img
-                        alt='random champion icon 4'
-                        style={{ flex: 1 }}
-                        src={getRandomIcon(1)}
-                    />
+                    <Box>
+                        <img
+                            alt='random champion icon 4'
+                            style={{ flex: 1 }}
+                            src={getRandomIcon(1)}
+                        />
+                    </Box>
                 )}
             </Flex>
         </Flex>

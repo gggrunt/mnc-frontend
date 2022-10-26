@@ -15,6 +15,7 @@ import {
     chakra,
     Flex,
     Heading,
+    Select,
     Tab,
     TabList,
     TabPanel,
@@ -181,7 +182,7 @@ export const PlayerScreen = React.memo(function PlayerScreen() {
         <Flex direction='column' justify='center' align='center'>
             <Flex
                 flex='1'
-                marginBottom='32'
+                marginBottom='8'
                 direction='column'
                 justify='center'
                 align='center'
@@ -196,22 +197,42 @@ export const PlayerScreen = React.memo(function PlayerScreen() {
                     flex='1'
                     wrap='wrap'
                 >
-                    <Flex direction='row' wrap='wrap' justify='center'>
-                        <Box marginBottom='4'>
+                    <Flex
+                        direction='row'
+                        wrap='wrap'
+                        justify='center'
+                        alignItems='center'
+                    >
+                        <Flex
+                            marginBottom='4'
+                            flexGrow='1'
+                            justifyContent='center'
+                            maxWidth='320'
+                        >
                             <SummonerCollage player={player} />
-                        </Box>
-                        <Box marginLeft='4' marginBottom='4'>
-                            <StatsCard stats={player} hideName={true} />
-                        </Box>
-                        <Box marginBottom='4'>
+                            <Box marginLeft={4}>
+                                <StatsCard stats={player} hideName={true} />
+                            </Box>
+                        </Flex>
+                        <Flex marginBottom='4' justifyContent='center'>
+                            {
+                                // TODO: we need to add the SPR rank here
+                            }
                             <MmrCard player={player} />
-                        </Box>
+                        </Flex>
                         <Flex flex='1' maxWidth='320'>
                             <Radar data={chartData} />
                         </Flex>
                     </Flex>
                 </Flex>
             </Flex>
+            {/* 
+                TODO: enable for season 1
+                <Select defaultValue={"season_1"} maxWidth={250}>
+                    <option value={"season_1"}>{"Season 1"}</option>
+                    <option value={"all_time"}>{"All Seasons"}</option>
+                </Select> 
+            */}
             <Tabs isFitted={true} maxWidth='100%'>
                 <TabList>
                     <Tab>Champion Overview</Tab>
@@ -255,7 +276,7 @@ export const PlayerScreen = React.memo(function PlayerScreen() {
                         />
                     </TabPanel>
                     <TabPanel>
-                        <PlayerMmrSummary playerId={player.name} />
+                        <PlayerMmrSummary player={player} />
                     </TabPanel>
                     <TabPanel>
                         <SortableTable

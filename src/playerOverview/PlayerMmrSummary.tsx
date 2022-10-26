@@ -12,7 +12,9 @@ import {
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 import { FiChevronDown, FiChevronUp, FiMinus } from 'react-icons/fi';
+import { MmrCard } from '../components/MmrCard';
 import { ToxicDataService } from '../services/toxicData/ToxicDataService';
+import { Player } from '../types/domain/Player';
 import {
     getMmrTrendingChange,
     mapMmrHistoryCollectionToPlayerMmrHistoryMap,
@@ -55,9 +57,9 @@ function processPlayerMmr(data: { gameId: number; mmr: number }[]): {
 }
 
 export const PlayerMmrSummary = React.memo(function PlayerMmrSummary({
-    playerId,
+    player,
 }: {
-    playerId: string;
+    player: Player;
 }) {
     const mmrPerMatchResponse = ToxicDataService.useMmrPerMatch();
     const mmrPerMatch = mmrPerMatchResponse.data ?? [];
@@ -65,7 +67,7 @@ export const PlayerMmrSummary = React.memo(function PlayerMmrSummary({
         mapMmrHistoryCollectionToPlayerMmrHistoryMap(mmrPerMatch);
 
     // get the mmr history collection for the selected user
-    const playerMmrPerMatch = mmrPerMatchMap[playerId] ?? [];
+    const playerMmrPerMatch = mmrPerMatchMap[player.name] ?? [];
 
     // ignore the first 10 games since they are used for placement
     const playerMmrPerMatchSliced = playerMmrPerMatch.slice(9);
@@ -99,6 +101,10 @@ export const PlayerMmrSummary = React.memo(function PlayerMmrSummary({
             {playerMmrPerMatchSliced.length > 1 ? (
                 <>
                     <Flex direction='row' justify='center' align='center'>
+                        {/* 
+                            // TODO: This for season 1
+                            <MmrCard player={player} /> 
+                        */}
                         <h1 style={{ fontSize: 60 }}>
                             {`${mmrChangePercentage}`}
                         </h1>

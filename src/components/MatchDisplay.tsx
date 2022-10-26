@@ -1,4 +1,4 @@
-import { border, Button, Flex, Image, Text } from '@chakra-ui/react';
+import { border, Button, Flex, Heading, Image, Text } from '@chakra-ui/react';
 import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChampionImages } from '../types/domain/ChampionImages';
@@ -49,6 +49,7 @@ const MatchPlayerCard = React.memo(
                     onClick={championNav}
                     flex={1}
                     padding={1}
+                    size='md'
                 >
                     <Image src={player.champion.images.portrait} />
                 </Button>
@@ -59,6 +60,7 @@ const MatchPlayerCard = React.memo(
                     backgroundColor={backgroundColor}
                     borderColor={borderColor}
                     borderWidth={borderColor ? 5 : undefined}
+                    size='md'
                 >
                     <Text
                         style={{
@@ -91,6 +93,7 @@ const BannedChampion = React.memo(
                     onClick={championNav}
                     padding={1}
                     flex={1}
+                    size='sm'
                 >
                     <Image
                         src={champion.images.square}
@@ -164,7 +167,7 @@ export const MatchDisplay = React.memo(function MatchDisplay({
                 alignItems: 'center',
             }}
         >
-            <h1>{title}</h1>
+            <Heading>{title}</Heading>
             <Flex direction={'column'}>
                 <h1
                     style={{
