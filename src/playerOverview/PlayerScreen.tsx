@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { ChangeEvent, useMemo, useState } from 'react';
 import { useLoaderData, useNavigate } from 'react-router-dom';
 import { Error } from '../components/Error';
 import { SortableTable } from '../components/SortableTable';
@@ -12,7 +12,6 @@ import {
 
 import {
     Box,
-    chakra,
     Flex,
     Heading,
     Select,
@@ -21,11 +20,12 @@ import {
     TabPanel,
     TabPanels,
     Tabs,
+    Tooltip,
 } from '@chakra-ui/react';
 import { ChartData } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
 import { Loading } from '../components/Loading';
-import { MmrCard } from '../components/MmrCard';
+import { SprCard } from '../components/SprCard';
 import { SummonerCollage } from '../components/SummonerCollage';
 import { ChampionClass, championClassWinRates } from '../data/championClasses';
 import {
@@ -42,10 +42,18 @@ import {
     teammateColumns,
 } from './playerScreenColumnHelper';
 import { PlayerScreenChampion } from './types/PlayerScreenChampion';
+import { AccoladesCollection } from '../components/AccoladesCollection';
 
 export async function loader(data: { params: any }) {
     return data.params.playerId;
 }
+
+enum SeasonType {
+    AllTime = 'all_time',
+    SeasonOne = 'season_1',
+}
+
+const initialSeasonSelectValue = SeasonType.AllTime;
 
 /**
  * Given a player, create an array of champions that player has played with image url populated
@@ -90,6 +98,8 @@ export const PlayerScreen = React.memo(function PlayerScreen() {
 
     const matchHistoryResponse = ToxicDataService.useMatchHistory();
     const matchHistory = matchHistoryResponse.data ?? [];
+
+    const [season, setSeason] = useState(initialSeasonSelectValue);
 
     // only recompute the player classes when are looking at a new player
     const playerClasses = useMemo(
@@ -178,6 +188,10 @@ export const PlayerScreen = React.memo(function PlayerScreen() {
         player.opponents ?? []
     );
 
+    const onSeasonChange = (event: ChangeEvent<HTMLSelectElement>) => {
+        setSeason(event.target.value as SeasonType);
+    };
+
     return (
         <Flex direction='column' justify='center' align='center'>
             <Flex
@@ -204,40 +218,51 @@ export const PlayerScreen = React.memo(function PlayerScreen() {
                         alignItems='center'
                     >
                         <Flex
-                            marginBottom='4'
+                            margin='4'
                             flexGrow='1'
                             justifyContent='center'
                             maxWidth='320'
+                            direction='column'
                         >
-                            <SummonerCollage player={player} />
-                            <Box marginLeft={4}>
-                                <StatsCard stats={player} hideName={true} />
-                            </Box>
+                            <Flex direction='row' marginBottom='4'>
+                                <SummonerCollage player={player} />
+                                <Box marginLeft={4}>
+                                    <StatsCard stats={player} hideName={true} />
+                                </Box>
+                            </Flex>
+                            <AccoladesCollection player={player} />
                         </Flex>
-                        <Flex marginBottom='4' justifyContent='center'>
+                        <Flex margin='4' justifyContent='center'>
                             {
-                                // TODO: we need to add the SPR rank here
+                                // TODO: For season 1, we need to add the SPR rank here
                             }
-                            <MmrCard player={player} />
+                            <SprCard player={player} sprTrend={0} />
                         </Flex>
-                        <Flex flex='1' maxWidth='320'>
+                        <Flex margin='4' flex='1' maxWidth='320'>
                             <Radar data={chartData} />
                         </Flex>
                     </Flex>
                 </Flex>
             </Flex>
-            {/* 
-                TODO: enable for season 1
-                <Select defaultValue={"season_1"} maxWidth={250}>
-                    <option value={"season_1"}>{"Season 1"}</option>
-                    <option value={"all_time"}>{"All Seasons"}</option>
-                </Select> 
-            */}
+            <Select
+                defaultValue={initialSeasonSelectValue}
+                maxWidth={250}
+                onChange={onSeasonChange}
+            >
+                {
+                    // add back in option for season 1 once season 1 launches
+                    // <option value={SeasonType.SeasonOne}>{'Season 1'}</option>
+                }
+                <option value={SeasonType.AllTime}>{'All Seasons'}</option>
+            </Select>
             <Tabs isFitted={true} maxWidth='100%'>
                 <TabList>
                     <Tab>Champion Overview</Tab>
                     <Tab>Match History</Tab>
-                    <Tab>MMR Summary</Tab>
+                    {
+                        // only show MMR summary for all time
+                        season === 'all_time' ? <Tab>MMR Summary</Tab> : null
+                    }
                     <Tab>Teammate Record</Tab>
                     <Tab>Opponent Record</Tab>
                 </TabList>
@@ -275,9 +300,14 @@ export const PlayerScreen = React.memo(function PlayerScreen() {
                             }}
                         />
                     </TabPanel>
-                    <TabPanel>
-                        <PlayerMmrSummary player={player} />
-                    </TabPanel>
+                    {
+                        // only show MMR summary for all time
+                        season === 'all_time' ? (
+                            <TabPanel>
+                                <PlayerMmrSummary player={player} />
+                            </TabPanel>
+                        ) : null
+                    }
                     <TabPanel>
                         <SortableTable
                             columns={teammateColumns}

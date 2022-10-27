@@ -42,7 +42,7 @@ const columns: ColumnDef<ChampionOverviewChampion, any>[] = [
     columnHelper.accessor((row) => row.winPercentage, {
         id: 'winPercentage',
         cell: (info) => info.getValue(),
-        header: () => <span>Win Percentage</span>,
+        header: () => <span>Win %</span>,
         meta: {
             isNumeric: true,
         },
@@ -66,7 +66,7 @@ const columns: ColumnDef<ChampionOverviewChampion, any>[] = [
     columnHelper.accessor((row) => row.pickPercentage, {
         id: 'Pick Rate',
         cell: (info) => `${info.getValue()}%`,
-        header: () => <span>Pick Rate</span>,
+        header: () => <span>Pick %</span>,
         meta: {
             isNumeric: true,
         },
@@ -74,7 +74,7 @@ const columns: ColumnDef<ChampionOverviewChampion, any>[] = [
     columnHelper.accessor((row) => row.banPercentage, {
         id: 'Ban Rate',
         cell: (info) => `${info.getValue()}%`,
-        header: () => <span>Ban Rate</span>,
+        header: () => <span>Ban %</span>,
         meta: {
             isNumeric: true,
         },

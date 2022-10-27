@@ -206,7 +206,7 @@ export const ChampionClassMap: { [id: string]: ChampionClass[] } = {
     Malphite: [ChampionClass.Vanguard],
     Maokai: [ChampionClass.Vanguard],
     Nautilus: [ChampionClass.Vanguard],
-    Nunu: [ChampionClass.Vanguard],
+    'Nunu & Willump': [ChampionClass.Vanguard],
     Ornn: [ChampionClass.Vanguard],
     Rammus: [ChampionClass.Vanguard],
     Rell: [ChampionClass.Vanguard],

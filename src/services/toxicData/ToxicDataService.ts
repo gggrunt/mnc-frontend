@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { useMatch } from 'react-router-dom';
 import { Champion } from '../../types/domain/Champion';
 import { Match } from '../../types/domain/Match';
 import { MmrHistoryItem } from '../../types/domain/MmrHistoryItem';

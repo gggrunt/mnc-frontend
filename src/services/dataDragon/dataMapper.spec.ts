@@ -23,7 +23,7 @@ describe('mapChampions', () => {
         },
     };
 
-    it('should map a collection of data dragon champions into a map of champion name to data dragon champion id ', () => {
+    it('should map a collection of data dragon champions into a map of champion name to data dragon champion id', () => {
         const result = mapChampions(mockDataDragonChampions);
         expect(result).toEqual({ Ahri: 'ddchamp1', 'Dr. Mundo': 'ddchamp2' });
     });

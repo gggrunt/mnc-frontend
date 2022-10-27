@@ -24,6 +24,8 @@ import {
 import { PickBanScreen } from '../admin/PickBanScreen';
 import { TeamBuilder } from '../teamBuilder/TeamBuilder';
 import { Leaderboard } from '../leaderboard/Leaderboard';
+import { loader as newsLoader, NewsDetail } from '../news/NewsDetail';
+import NewsOverview from '../news/NewsOverview';
 
 export const router = createBrowserRouter([
     {
@@ -91,6 +93,15 @@ export const router = createBrowserRouter([
             {
                 path: '/leaderboard',
                 element: <Leaderboard />,
+            },
+            {
+                path: '/news',
+                element: <NewsOverview />,
+            },
+            {
+                path: '/news/:newsId',
+                loader: newsLoader,
+                element: <NewsDetail />,
             },
         ],
     },

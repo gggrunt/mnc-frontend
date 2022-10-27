@@ -45,22 +45,19 @@ export function mapMmrHistoryCollectionToPlayerMmrHistoryMap(
 }
 
 /**
- * Takes a collection of a player's mmr history items, and returns the mmr change
- * based on the last 5 games completed
+ * Takes a collection of a player's mmr history items, and returns the average mmr change
+ * from the most recent games, up to five games worth of mmr changes
  */
 export function getMmrTrendingChange(data: { gameId: number; mmr: number }[]) {
     // this will return an array of the last 5 items (or if less than 5 items, the entire collection)
-    const last5Matches = data.slice(-5);
-
-    let total = 0;
-
-    if (last5Matches.length <= 1) {
+    const recentMatches = data.slice(-6);
+    const matchCount = recentMatches.length;
+    if (matchCount <= 1) {
         return 0;
     }
-
-    for (let i = 1; i < last5Matches.length; i++) {
-        total = last5Matches[i].mmr - last5Matches[i - 1].mmr;
-    }
-
-    return total;
+    const totalChange =
+        recentMatches[matchCount - 1].mmr - recentMatches[0].mmr;
+    const trend = totalChange / (matchCount - 1);
+    // return rounded to nearest decimal
+    return parseFloat(trend.toFixed(1));
 }

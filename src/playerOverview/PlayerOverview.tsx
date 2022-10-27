@@ -3,8 +3,8 @@ import { ColumnDef, createColumnHelper, Row } from '@tanstack/react-table';
 import React from 'react';
 import { FiChevronDown, FiChevronUp, FiMinus } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import { MmrTag } from '../components/MmrTag';
 import { SortableTable } from '../components/SortableTable';
+import { SprTag } from '../components/SprTag';
 import { ToxicDataService } from '../services/toxicData/ToxicDataService';
 import { Player } from '../types/domain/Player';
 import {
@@ -73,7 +73,7 @@ const columns: ColumnDef<PlayerTableData, any>[] = [
     columnHelper.accessor((row) => row.winPercentage, {
         id: 'winPercentage',
         cell: (info) => info.getValue(),
-        header: () => <span>Win Percentage</span>,
+        header: () => <span>Win %</span>,
         meta: {
             isNumeric: true,
         },
@@ -94,51 +94,52 @@ const columns: ColumnDef<PlayerTableData, any>[] = [
             isNumeric: true,
         },
     }),
-    columnHelper.accessor((row) => row.mmr, {
-        id: 'mmr',
-        cell: (info) => {
-            return <MmrTag props={{ size: 'md' }} player={info.row.original} />;
-        },
-        header: () => <span>MMR</span>,
-        meta: {
-            isNumeric: true,
-        },
-    }),
-    columnHelper.accessor((row) => row.mmrChange, {
-        id: 'mmrChange',
-        cell: (info) => {
-            const value = info.getValue();
-            return (
-                <div
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexDirection: 'row',
-                    }}
-                >
-                    {value === -999 ? (
-                        <h1>-</h1>
-                    ) : (
-                        <>
-                            {value}
-                            {value === 0 ? (
-                                <FiMinus size={'24'} color={'orange'} />
-                            ) : value > 0 ? (
-                                <FiChevronUp size={'24'} color={'green'} />
-                            ) : (
-                                <FiChevronDown size={'24'} color={'red'} />
-                            )}
-                        </>
-                    )}
-                </div>
-            );
-        },
-        header: () => <span>MMR Change</span>,
-        meta: {
-            isNumeric: true,
-        },
-    }),
+    // TODO: For Season 1, put these back in
+    // columnHelper.accessor((row) => row.mmr, {
+    //     id: 'mmr',
+    //     cell: (info) => {
+    //         return <SprTag props={{ size: 'md' }} player={info.row.original} />;
+    //     },
+    //     header: () => <span>MMR</span>,
+    //     meta: {
+    //         isNumeric: true,
+    //     },
+    // }),
+    // columnHelper.accessor((row) => row.mmrChange, {
+    //     id: 'mmrChange',
+    //     cell: (info) => {
+    //         const value = info.getValue();
+    //         return (
+    //             <div
+    //                 style={{
+    //                     display: 'flex',
+    //                     alignItems: 'center',
+    //                     justifyContent: 'center',
+    //                     flexDirection: 'row',
+    //                 }}
+    //             >
+    //                 {value === -999 ? (
+    //                     <h1>-</h1>
+    //                 ) : (
+    //                     <>
+    //                         {value}
+    //                         {value === 0 ? (
+    //                             <FiMinus size={'24'} color={'orange'} />
+    //                         ) : value > 0 ? (
+    //                             <FiChevronUp size={'24'} color={'green'} />
+    //                         ) : (
+    //                             <FiChevronDown size={'24'} color={'red'} />
+    //                         )}
+    //                     </>
+    //                 )}
+    //             </div>
+    //         );
+    //     },
+    //     header: () => <span>MMR Trend</span>,
+    //     meta: {
+    //         isNumeric: true,
+    //     }
+    //}),
 ];
 
 export const PlayerOverview = React.memo(function PlayerOverview() {

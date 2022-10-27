@@ -3,8 +3,8 @@ import { ColumnDef, createColumnHelper, Row } from '@tanstack/react-table';
 import React from 'react';
 import { FiChevronDown, FiChevronUp, FiMinus } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import { MmrTag } from '../components/MmrTag';
 import { SortableTable } from '../components/SortableTable';
+import { SprTag } from '../components/SprTag';
 import { ToxicDataService } from '../services/toxicData/ToxicDataService';
 import { Player } from '../types/domain/Player';
 import {
@@ -73,15 +73,7 @@ const columns: ColumnDef<PlayerTableData, any>[] = [
     columnHelper.accessor((row) => row.winPercentage, {
         id: 'winPercentage',
         cell: (info) => info.getValue(),
-        header: () => <span>Win Percentage</span>,
-        meta: {
-            isNumeric: true,
-        },
-    }),
-    columnHelper.accessor((row) => row.losses, {
-        id: 'losses',
-        cell: (info) => info.getValue(),
-        header: () => <span>Losses</span>,
+        header: () => <span>Win %</span>,
         meta: {
             isNumeric: true,
         },
@@ -97,7 +89,7 @@ const columns: ColumnDef<PlayerTableData, any>[] = [
     columnHelper.accessor((row) => row.mmr, {
         id: 'mmr',
         cell: (info) => {
-            return <MmrTag props={{ size: 'md' }} player={info.row.original} />;
+            return <SprTag props={{ size: 'md' }} player={info.row.original} />;
         },
         header: () => <span>SPR</span>,
         meta: {
@@ -134,7 +126,7 @@ const columns: ColumnDef<PlayerTableData, any>[] = [
                 </div>
             );
         },
-        header: () => <span>SPR Change</span>,
+        header: () => <span>SPR Trend</span>,
         meta: {
             isNumeric: true,
         },
@@ -159,6 +151,7 @@ export const Leaderboard = React.memo(function Leaderboard() {
                 src={
                     'https://cdn.discordapp.com/attachments/1032423770578755584/1032433210275135519/season_1_transparent.png'
                 }
+                alt='season 1 splash'
             />
             <Heading>Leaderboard</Heading>
             <SortableTable
@@ -167,7 +160,7 @@ export const Leaderboard = React.memo(function Leaderboard() {
                 getRowProps={(row: Row<any>) => {
                     return {
                         onClick: () => {
-                            navigate(row.getValue('name'));
+                            navigate(`/playerOverview/${row.getValue('name')}`);
                             window.scrollTo(0, 0);
                         },
                     };

@@ -1,4 +1,4 @@
-import { border, Button, Flex, Heading, Image, Text } from '@chakra-ui/react';
+import { Button, Flex, Heading, Image, Text } from '@chakra-ui/react';
 import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChampionImages } from '../types/domain/ChampionImages';
@@ -135,12 +135,18 @@ export const MatchDisplay = React.memo(function MatchDisplay({
                 textColor={casterMode ? 'white' : undefined}
                 backgroundColor={casterMode ? 'rgb(0,0,0,0.8)' : undefined}
                 borderColor={casterMode ? TEAM_1_COLOR : undefined}
+                key={'MatchPlayerCard_' + player.name}
             />
         );
     });
 
     const team1BansCards = team1Bans.map((champion) => {
-        return <BannedChampion champion={champion} />;
+        return (
+            <BannedChampion
+                champion={champion}
+                key={'BannedChampion_' + champion.name}
+            />
+        );
     });
 
     const team2Cards = team2.map((player) => {
@@ -150,12 +156,18 @@ export const MatchDisplay = React.memo(function MatchDisplay({
                 textColor={casterMode ? 'white' : undefined}
                 backgroundColor={casterMode ? 'rgb(0,0,0,0.8)' : undefined}
                 borderColor={casterMode ? TEAM_2_COLOR : undefined}
+                key={'MatchPlayerCard_' + player.name}
             />
         );
     });
 
     const team2BansCards = team2Bans.map((champion) => {
-        return <BannedChampion champion={champion} />;
+        return (
+            <BannedChampion
+                champion={champion}
+                key={'BannedChampion_' + champion.name}
+            />
+        );
     });
 
     return (

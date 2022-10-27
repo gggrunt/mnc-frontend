@@ -53,7 +53,7 @@ export const StatsCard = React.memo(function StatsCard({
                 <Text>{'Total Games: ' + totalGames}</Text>
                 {stats.extraStats !== undefined
                     ? Array.from(Object.entries(stats.extraStats)).map((kv) => (
-                          <Flex direction='row'>
+                          <Flex direction='row' key={'flex' + kv[0]}>
                               <Text>{`${kv[0]}: ${kv[1]}`}</Text>
                           </Flex>
                       ))
