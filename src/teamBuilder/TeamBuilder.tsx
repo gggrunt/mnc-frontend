@@ -1,18 +1,10 @@
-import { Box, Flex, Heading, Select } from '@chakra-ui/react';
-import { ColumnDef, createColumnHelper, Row } from '@tanstack/react-table';
-import React, { useRef, useState } from 'react';
-import { FiChevronDown, FiChevronUp, FiMinus } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom';
-import { MmrTag } from '../components/MmrTag';
-import { SortableTable } from '../components/SortableTable';
+import { Flex, Heading, Select, Tag, Text } from '@chakra-ui/react';
+import React, { useState } from 'react';
+import { championTags, getChampionTagColor } from '../data/championTags';
 import { DataDragonService } from '../services/dataDragon/DataDragonService';
 import { ToxicDataService } from '../services/toxicData/ToxicDataService';
-import { Player } from '../types/domain/Player';
 import { getChampionImage } from '../utils/championImageHelpers';
-import {
-    getMmrTrendingChange,
-    mapMmrHistoryCollectionToPlayerMmrHistoryMap,
-} from '../utils/mmrHelpers';
+import { mapMmrHistoryCollectionToPlayerMmrHistoryMap } from '../utils/mmrHelpers';
 
 const EMPTY_IMAGE =
     'https://cdn4.iconfinder.com/data/icons/symbols-vol-1-1/40/user-person-single-id-account-player-male-female-512.png';
@@ -101,6 +93,24 @@ const TeamBuilderPlayer = React.memo(function TeamBuilderItem() {
         setPlayer(event.target.value);
     };
 
+    const tagsCollection = champion ? championTags[champion] : [];
+    const tags = tagsCollection
+        ? tagsCollection.map((tag) => {
+              return (
+                  <Tag
+                      textAlign='center'
+                      bg={getChampionTagColor(tag)}
+                      color={'black'}
+                      size={'sm'}
+                      minW='100%'
+                      marginBottom={1}
+                  >
+                      <Text>{tag.toString().toUpperCase()}</Text>
+                  </Tag>
+              );
+          })
+        : null;
+
     return (
         <Flex
             alignSelf={'stretch'}
@@ -141,8 +151,7 @@ const TeamBuilderPlayer = React.memo(function TeamBuilderItem() {
                     />
                 </Flex>
                 <Flex direction={'column'} flex={1} flexWrap={'wrap'}>
-                    <h1 style={{ width: 100 }}>{player ?? '???'}</h1>
-                    <h1>Tags</h1>
+                    {tags}
                 </Flex>
             </Flex>
         </Flex>
@@ -159,6 +168,9 @@ export const TeamBuilder = React.memo(function TeamBuilder() {
     // const mmrPerMatchMap =
     //     mapMmrHistoryCollectionToPlayerMmrHistoryMap(mmrPerMatch);
 
+    const [team1, setTeam1] = useState();
+    const [team2, setTeam2] = useState();
+
     return (
         <div
             style={{
@@ -169,7 +181,12 @@ export const TeamBuilder = React.memo(function TeamBuilder() {
             }}
         >
             <Heading>Team Builder</Heading>
-            <Flex direction={'row'} alignSelf={'center'} maxWidth={1024}>
+            <Flex
+                direction={'row'}
+                alignSelf={'center'}
+                maxWidth={1024}
+                marginBottom={4}
+            >
                 <Flex
                     flex={1}
                     direction={'column'}
@@ -218,6 +235,33 @@ export const TeamBuilder = React.memo(function TeamBuilder() {
                     <TeamBuilderPlayer />
                     <TeamBuilderPlayer />
                     <TeamBuilderPlayer />
+                </Flex>
+            </Flex>
+            <Flex direction={'row'} alignSelf={'center'} maxWidth={1024}>
+                <Flex
+                    flex={1}
+                    direction={'column'}
+                    alignItems={'center'}
+                    justifyContent={'center'}
+                    padding={4}
+                    borderWidth={1}
+                    borderRadius={8}
+                    borderColor={'black'}
+                    marginRight={8}
+                >
+                    <h1>Team 1 Summary</h1>
+                </Flex>
+                <Flex
+                    flex={1}
+                    direction={'column'}
+                    alignItems={'center'}
+                    justifyContent={'center'}
+                    padding={4}
+                    borderWidth={1}
+                    borderRadius={8}
+                    borderColor={'black'}
+                >
+                    <h1>Team 2 Summary</h1>
                 </Flex>
             </Flex>
         </div>
