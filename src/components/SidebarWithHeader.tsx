@@ -30,6 +30,7 @@ import {
     FiZap,
 } from 'react-icons/fi';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { SearchBar } from './SearchBar';
 
 interface LinkItemProps {
     name: string;
@@ -74,7 +75,9 @@ export default function SidebarWithHeader({
                 </DrawerContent>
             </Drawer>
             {/* mobilenav */}
-            <MobileNav onOpen={onOpen} />
+            <Box>
+                <MobileNav onOpen={onOpen} />
+            </Box>
             <Box ml={{ base: 0, md: 60 }} p='4'>
                 {children}
             </Box>
@@ -254,6 +257,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
             </MenuList>
           </Menu>
         </Flex> */}
+                <SearchBar></SearchBar>
             </HStack>
         </Flex>
     );
