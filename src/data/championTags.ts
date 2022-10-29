@@ -1,5 +1,3 @@
-import { whiten } from '@chakra-ui/theme-tools';
-
 export enum ChampionTag {
     Physical = 'physical',
     Magic = 'magic',
