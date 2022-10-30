@@ -50,15 +50,32 @@ const TeamBuilderBan = React.memo(function TeamBuilderBan({
             justifyContent={'center'}
             alignItems={'center'}
         >
-            <img
-                src={
-                    ban !== undefined
-                        ? getChampionImage(championIdMap[ban]).square
-                        : EMPTY_IMAGE
-                }
-                height={64}
-                width={64}
-            />
+            <div style={{ position: 'relative', top: 0, left: 0 }}>
+                <img
+                    style={{ position: 'relative', top: 0, left: 0 }}
+                    src={
+                        ban !== undefined
+                            ? getChampionImage(championIdMap[ban]).square
+                            : EMPTY_IMAGE
+                    }
+                    height={64}
+                    width={64}
+                />
+                <img
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                    }}
+                    src={
+                        'https://media.discordapp.net/attachments/1003441926529355826/1036078852818083892/ban_icon.png'
+                    }
+                    width='100%'
+                    height='100%'
+                />
+            </div>
             <Select placeholder={'Select Ban'} onChange={handleChange}>
                 {options}
             </Select>
@@ -221,20 +238,101 @@ function auditTeam(team: Team) {
         audit.push(ChampionAuditCode.NoPhysicalDamage);
     }
 
-    if (physical + magic <= 3) {
+    if (physical + magic <= 1) {
         audit.push(ChampionAuditCode.LowDamage);
     }
 
     return audit;
 }
 
-export const TeamBuilder = React.memo(function TeamBuilder() {
-    // const navigate = useNavigate();
+const TeamAuditTags = React.memo(function TeamAuditTags({
+    tags,
+}: {
+    tags: ChampionAuditCode[];
+}) {
+    const components = tags.map((code) => {
+        return (
+            <Tag
+                textAlign='center'
+                bg={getChampionAuditCodeColor(code)}
+                color={'black'}
+                size={'sm'}
+                marginBottom={1}
+            >
+                <Text>{code.toString().toUpperCase()}</Text>
+            </Tag>
+        );
+    });
+
+    return <>{components}</>;
+});
+
+const ChampionIconsRow = React.memo(function ChampionIconsRow({
+    champions,
+}: {
+    champions: Champion[];
+}) {
+    const championIdMapResponse = DataDragonService.useChampionIdMap();
+    const championIdMap = championIdMapResponse.data ?? {};
+
+    const components = champions
+        .map((champion) => {
+            return (
+                <Tooltip label={champion.name}>
+                    <img
+                        src={
+                            getChampionImage(championIdMap[champion.name])
+                                .square
+                        }
+                        width='32'
+                        height='32'
+                        style={{ padding: 1 }}
+                    />
+                </Tooltip>
+            );
+        })
+        .splice(0, 10);
+
+    return <>{components}</>;
+});
+
+function useTeamTopChampions(team: TeamPlayer[]) {
     const playersResponse = ToxicDataService.usePlayers();
     const players = playersResponse.data ?? [];
 
-    const championIdMapResponse = DataDragonService.useChampionIdMap();
-    const championIdMap = championIdMapResponse.data ?? {};
+    // look at team 2 and pull their team's top champions
+    let team1TopChampions: { [id: string]: Champion } = {};
+    for (const teamPlayer of Object.values(team)) {
+        const player = players.find(
+            (data) => data.name === teamPlayer.playerName
+        );
+        if (player) {
+            const topChampions = getPlayerTopChampions(player);
+            for (const champion of topChampions) {
+                const topChamp = team1TopChampions[champion.name];
+                if (topChamp) {
+                    const wins = topChamp.wins + champion.wins;
+                    const totalGames =
+                        topChamp.totalGames + champion.totalGames;
+                    team1TopChampions[champion.name] = {
+                        ...topChamp,
+                        wins: wins,
+                        winPercentage: Math.round((wins / totalGames) * 100),
+                    };
+                } else {
+                    team1TopChampions[champion.name] = champion;
+                }
+            }
+        }
+    }
+
+    return Object.values(team1TopChampions).sort(
+        (a, b) => b.winPercentage * b.wins - a.winPercentage * a.wins
+    );
+}
+
+export const TeamBuilder = React.memo(function TeamBuilder() {
+    // const navigate = useNavigate();
 
     // const mmrPerMatchResponse = ToxicDataService.useMmrPerMatch();
     // const mmrPerMatch = mmrPerMatchResponse.data ?? [];
@@ -321,80 +419,8 @@ export const TeamBuilder = React.memo(function TeamBuilder() {
         setTeam2AuditCodes(auditTeam(team2));
     }, [team2]);
 
-    // look at team 2 and pull their team's top champions
-    let team1TopChampions: { [id: string]: Champion } = {};
-    for (const teamPlayer of Object.values(team1.players)) {
-        const player = players.find(
-            (data) => data.name === teamPlayer.playerName
-        );
-        if (player) {
-            const topChampions = getPlayerTopChampions(player);
-            for (const champion of topChampions) {
-                const topChamp = team1TopChampions[champion.name];
-                if (topChamp) {
-                    const wins = topChamp.wins + champion.wins;
-                    const totalGames =
-                        topChamp.totalGames + champion.totalGames;
-                    team1TopChampions[champion.name] = {
-                        ...topChamp,
-                        wins: wins,
-                        winPercentage: Math.round((wins / totalGames) * 100),
-                    };
-                } else {
-                    team1TopChampions[champion.name] = champion;
-                }
-            }
-        }
-    }
-
-    const team1SuggestedBans = Object.values(team1TopChampions).sort(
-        (a, b) => b.winPercentage * b.wins - a.winPercentage * a.wins
-    );
-    const team1SuggestedBansIcons = team1SuggestedBans
-        .map((champion) => {
-            return (
-                <Tooltip label={champion.name}>
-                    <img
-                        src={
-                            getChampionImage(championIdMap[champion.name])
-                                .square
-                        }
-                        width='32'
-                        height='32'
-                        style={{ padding: 1 }}
-                    />
-                </Tooltip>
-            );
-        })
-        .splice(0, 10);
-
-    const team1AuditTags = team1AuditCodes.map((code) => {
-        return (
-            <Tag
-                textAlign='center'
-                bg={getChampionAuditCodeColor(code)}
-                color={'black'}
-                size={'sm'}
-                marginBottom={1}
-            >
-                <Text>{code.toString().toUpperCase()}</Text>
-            </Tag>
-        );
-    });
-
-    const team2AuditTags = team2AuditCodes.map((code) => {
-        return (
-            <Tag
-                textAlign='center'
-                bg={getChampionAuditCodeColor(code)}
-                color={'black'}
-                size={'sm'}
-                marginBottom={1}
-            >
-                <Text>{code.toString().toUpperCase()}</Text>
-            </Tag>
-        );
-    });
+    const team1TopChamps = useTeamTopChampions(Object.values(team1.players));
+    const team2TopChamps = useTeamTopChampions(Object.values(team2.players));
 
     return (
         <div
@@ -406,6 +432,7 @@ export const TeamBuilder = React.memo(function TeamBuilder() {
             }}
         >
             <Heading>Team Builder</Heading>
+            <h1>v0.0.1</h1>
             <Flex
                 direction={'row'}
                 alignSelf={'center'}
@@ -431,7 +458,7 @@ export const TeamBuilder = React.memo(function TeamBuilder() {
                         alignSelf={'stretch'}
                         justifyContent={'center'}
                     >
-                        {team1SuggestedBansIcons}
+                        <ChampionIconsRow champions={team1TopChamps} />
                     </Flex>
                     <Flex direction={'row'} alignSelf={'stretch'}>
                         <TeamBuilderBan
@@ -498,6 +525,13 @@ export const TeamBuilder = React.memo(function TeamBuilder() {
                     margin={4}
                 >
                     <h1>Team 2</h1>
+                    <Flex
+                        direction={'row'}
+                        alignSelf={'stretch'}
+                        justifyContent={'center'}
+                    >
+                        <ChampionIconsRow champions={team2TopChamps} />
+                    </Flex>
                     <Flex direction={'row'} alignSelf={'stretch'}>
                         <TeamBuilderBan
                             ban={team2.bans[0]}
@@ -574,7 +608,7 @@ export const TeamBuilder = React.memo(function TeamBuilder() {
                     minWidth={460}
                 >
                     <h1>Team 1 Summary</h1>
-                    {team1AuditTags}
+                    <TeamAuditTags tags={team1AuditCodes} />
                 </Flex>
                 <Flex
                     flex={1}
@@ -589,7 +623,7 @@ export const TeamBuilder = React.memo(function TeamBuilder() {
                     minWidth={460}
                 >
                     <h1>Team 2 Summary</h1>
-                    {team2AuditTags}
+                    <TeamAuditTags tags={team2AuditCodes} />
                 </Flex>
             </Flex>
         </div>
