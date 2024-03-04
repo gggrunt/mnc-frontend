@@ -13,7 +13,7 @@ export default function ARTICLE_11_18_2022() {
             <img
                 style={paragraphStyle}
                 src={
-                    'https://cdn.discordapp.com/attachments/1044352840161820803/1044376086412275783/spr_mmr.jpg'
+                    'https://cdn.discordapp.xyz/attachments/1044352840161820803/1044376086412275783/spr_mmr.jpg'
                 }
                 alt='spr_mmr_diagram'
             />
@@ -41,7 +41,7 @@ export default function ARTICLE_11_18_2022() {
 
             <img
                 style={paragraphStyle}
-                src='https://cdn.discordapp.com/attachments/1044352840161820803/1044374473484271697/image.png'
+                src='https://cdn.discordapp.xyz/attachments/1044352840161820803/1044374473484271697/image.png'
                 alt='mmr'
             ></img>
 
@@ -68,7 +68,7 @@ export default function ARTICLE_11_18_2022() {
             </p>
             <img
                 style={paragraphStyle}
-                src='https://cdn.discordapp.com/attachments/1044352840161820803/1044352851272536074/image.png'
+                src='https://cdn.discordapp.xyz/attachments/1044352840161820803/1044352851272536074/image.png'
                 alt='leaderboard'
             ></img>
         </>

@@ -5,16 +5,16 @@ import { NewsCards } from '../news/NewsCards';
 import { useCountdown } from '../utils/useCountdown';
 
 const backgroundVideo =
-    'https://cdn.discordapp.com/attachments/515016728506269698/1037262813627953152/Tunnel_-_26475_VP9.webm';
+    'https://cdn.discordapp.xyz/attachments/515016728506269698/1037262813627953152/Tunnel_-_26475_VP9.webm';
 //'https://cdn.discordapp.com/attachments/972956581220192346/1032190900295716974/Neon_-_21368_VP9.webm';
 //'https://blitz-cdn-videos.blitz.gg/ui/video/Homepage-Slide-One.webm';
 // 'https://screensavers.riotgames.com/v2/latest/content/original/AnimatedArt/animated-freljord.webm';
 //https://screensavers.riotgames.com/v2/latest/content/original/AnimatedArt/arcade-animated-02.webm
 
 const generalLogo =
-    'https://cdn.discordapp.com/attachments/983610720316977193/1100465959132729495/mnc_text_logo.png';
+    'https://cdn.discordapp.xyz/attachments/983610720316977193/1100465959132729495/mnc_text_logo.png';
 const season1Logo =
-    'https://cdn.discordapp.com/attachments/1032423770578755584/1032433210275135519/season_1_transparent.png';
+    'https://cdn.discordapp.xyz/attachments/1032423770578755584/1032433210275135519/season_1_transparent.png';
 
 export default function Home() {
     const navigate = useNavigate();

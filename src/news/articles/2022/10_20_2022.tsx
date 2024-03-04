@@ -28,7 +28,7 @@ export default function ARTICLE_10_20_2022() {
             <img
                 style={{ margin: 'auto' }}
                 src={
-                    'https://cdn.discordapp.com/attachments/1032423770578755584/1032433210275135519/season_1_transparent.png'
+                    'https://cdn.discordapp.xyz/attachments/1032423770578755584/1032433210275135519/season_1_transparent.png'
                 }
                 alt='season 1 splash'
             />
