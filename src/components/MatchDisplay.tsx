@@ -2,6 +2,7 @@ import { Button, Flex, Heading, Image, Text } from '@chakra-ui/react';
 import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChampionImages } from '../types/domain/ChampionImages';
+import { DirtyWordCleaner } from '../utils/DirtyWordCleaner';
 
 export type MatchDisplayChampion = {
     name: string;
@@ -74,7 +75,9 @@ const MatchPlayerCard = React.memo(
                             }}
                             onClick={playerNav}
                         >
-                            {player.name.toUpperCase()}
+                            {DirtyWordCleaner(
+                                player.name.toLowerCase()
+                            ).toUpperCase()}
                         </Text>
                     </Button>
                 ) : null}

@@ -48,6 +48,7 @@ import {
     getSprTrendingChange,
     mapSprHistoryCollectionToPlayerSprHistoryMap,
 } from '../utils/sprHelpers';
+import { DirtyWordCleaner } from '../utils/DirtyWordCleaner';
 
 export async function loader(data: { params: any }) {
     return data.params.playerId;
@@ -235,7 +236,7 @@ export const PlayerScreen = React.memo(function PlayerScreen() {
                 align='center'
             >
                 <Heading fontStyle='italic'>
-                    {player.name.toUpperCase()}
+                    {DirtyWordCleaner(player.name).toUpperCase()}
                 </Heading>
                 <Flex
                     direction='row'

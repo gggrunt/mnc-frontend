@@ -3,18 +3,18 @@ import { FiArrowRight, FiTwitch, FiYoutube } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { NewsCards } from '../news/NewsCards';
 import { useCountdown } from '../utils/useCountdown';
+import mnc_text_logo from '../assets/mnc_text_logo.png';
+import season_1_transparent from '../assets/season_1_transparent.png';
+import background from '../assets/background.webp';
 
-const backgroundVideo =
-    'https://cdn.discordapp.xyz/attachments/515016728506269698/1037262813627953152/Tunnel_-_26475_VP9.webm';
+const backgroundVideo = background;
 //'https://cdn.discordapp.com/attachments/972956581220192346/1032190900295716974/Neon_-_21368_VP9.webm';
 //'https://blitz-cdn-videos.blitz.gg/ui/video/Homepage-Slide-One.webm';
 // 'https://screensavers.riotgames.com/v2/latest/content/original/AnimatedArt/animated-freljord.webm';
 //https://screensavers.riotgames.com/v2/latest/content/original/AnimatedArt/arcade-animated-02.webm
 
-const generalLogo =
-    'https://cdn.discordapp.xyz/attachments/983610720316977193/1100465959132729495/mnc_text_logo.png';
-const season1Logo =
-    'https://cdn.discordapp.xyz/attachments/1032423770578755584/1032433210275135519/season_1_transparent.png';
+const generalLogo = mnc_text_logo;
+const season1Logo = season_1_transparent;
 
 export default function Home() {
     const navigate = useNavigate();
@@ -48,12 +48,8 @@ export default function Home() {
                         width: '100%',
                     }}
                 >
-                    <video
-                        autoPlay={true}
-                        loop={true}
-                        muted={true}
-                        playsInline={true}
-                        preload='none'
+                    <img
+                        src={backgroundVideo}
                         style={{
                             position: 'absolute',
                             left: 0,
@@ -62,9 +58,7 @@ export default function Home() {
                             height: '100%',
                             objectFit: 'cover',
                         }}
-                    >
-                        <source type='video/webm' src={backgroundVideo} />
-                    </video>
+                    />
                     <div
                         style={{
                             position: 'absolute',

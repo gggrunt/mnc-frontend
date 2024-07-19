@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { SortableTable } from '../components/SortableTable';
 import { ToxicDataService } from '../services/toxicData/ToxicDataService';
 import { Player } from '../types/domain/Player';
+import { DirtyWordCleaner } from '../utils/DirtyWordCleaner';
 
 type PlayerTableData = {
     name: string;
@@ -48,7 +49,9 @@ const columnHelper = createColumnHelper<PlayerTableData>();
 const columns: ColumnDef<PlayerTableData, any>[] = [
     columnHelper.accessor((row) => row.name, {
         id: 'name',
-        cell: (info) => info.getValue(),
+        cell: (info) => {
+            return <div>{DirtyWordCleaner(info.getValue())}</div>;
+        },
         header: () => <span>Name</span>,
     }),
     columnHelper.accessor((row) => row.wins, {

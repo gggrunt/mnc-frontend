@@ -1,12 +1,6 @@
 import { Flex, Heading } from '@chakra-ui/react';
-import {
-    ColumnDef,
-    createColumnHelper,
-    Row,
-    RowSelection,
-} from '@tanstack/react-table';
+import { ColumnDef, createColumnHelper, Row } from '@tanstack/react-table';
 import React from 'react';
-import { FiChevronDown, FiChevronUp, FiMinus } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { SortableTable } from '../components/SortableTable';
 import { SprTag } from '../components/SprTag';
@@ -18,6 +12,7 @@ import {
     getSprValue,
     MIN_GAMES_REQUIRED,
 } from '../utils/sprHelpers';
+import season_1_transparent from '../assets/season_1_transparent.png';
 
 type PlayerTableData = {
     name: string;
@@ -187,12 +182,7 @@ export const Leaderboard = React.memo(function Leaderboard() {
 
     return (
         <Flex direction='column' justify='center' align='center'>
-            <img
-                src={
-                    'https://cdn.discordapp.xyzattachments/1032423770578755584/1032433210275135519/season_1_transparent.png'
-                }
-                alt='season 1 splash'
-            />
+            <img src={season_1_transparent} alt='season 1 splash' />
             <Heading>Leaderboard</Heading>
             <h1 style={{ marginBottom: 8 }}>
                 * Players must complete 30 games before their SPR is qualified
