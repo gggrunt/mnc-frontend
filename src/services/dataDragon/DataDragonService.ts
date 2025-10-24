@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Champions } from '../../types/service/dataDragon/DataDragonChampions';
 import { mapChampions } from './dataMapper';
 
-const LEAGUE_PATCH_NUMBER = '14.3.1';
+const LEAGUE_PATCH_NUMBER = '15.21.1';
 
 const championDataEndpoint = `https://ddragon.leagueoflegends.com/cdn/${LEAGUE_PATCH_NUMBER}/data/en_US/champion.json`;
 
