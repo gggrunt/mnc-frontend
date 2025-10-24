@@ -1,7 +1,7 @@
 import { ChampionImages } from '../types/domain/ChampionImages';
 import { Match } from '../types/domain/Match';
 
-const LEAGUE_PATCH_NUMBER = '14.3.1';
+const LEAGUE_PATCH_NUMBER = '15.21.1';
 
 /**
  * Gets the champion image url given a data dragon champion id.
